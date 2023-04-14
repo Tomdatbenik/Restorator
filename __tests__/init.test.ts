@@ -1,4 +1,4 @@
-import { Model } from "../src/classes/model.base";
+import { Model } from "../src";
 import { Creatable } from "../src";
 
 describe("Creatable", () => {

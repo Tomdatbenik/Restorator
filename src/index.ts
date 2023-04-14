@@ -1,3 +1,4 @@
+import { Model } from './classes/model.base';
 import { Creatable } from "./decorators/creatable.decorator";
 
-export { Creatable };
+export { Creatable, Model };
