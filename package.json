@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest",
     "watch": "tsc --project tsconfig.build.json",
-    "build": "tsc --project tsconfig.build.json"
+    "build": "tsc --project tsconfig.build.json && tsc --project tsconfig.type.json"
   },
   "repository": {
     "type": "git",
