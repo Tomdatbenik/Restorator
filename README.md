@@ -1,4 +1,3 @@
 # Restorator 
 
-![Tests](https://github.com/tomdatbenik/Restorator/actions/workflows/node.js.yml/badge.svg)
-
+[![Tests](https://github.com/Tomdatbenik/Restorator/actions/workflows/tests.yml/badge.svg)](https://github.com/Tomdatbenik/Restorator/actions/workflows/tests.yml)
