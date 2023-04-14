@@ -3,5 +3,9 @@ export function Creatable<T extends { new (...args: any[]): {} }>(
 ) {
   return class extends constructor {
     _creatable = true;
+
+    get creatable() {
+      return this._creatable;
+    }
   };
 }

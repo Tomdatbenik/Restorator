@@ -1,14 +1,21 @@
+import { Model } from "../src/classes/model.base";
 import { Creatable } from "../src";
 
 describe("Creatable", () => {
   @Creatable
-  class RModel {
-    constructor() {}
-  }
+  class ModelWithCreatable extends Model {}
 
-  it("should have creatable true", () => {
-    const test = new RModel();
+  class ModelWithoutCreatable extends Model{}
 
-    expect((test as any)._creatable).toBe(true)
+  it("should be true", () => {
+    const test = new ModelWithCreatable();
+
+    expect(test.creatable).toBe(true);
+  });
+
+  it("should be false", () => {
+    const test = new ModelWithoutCreatable();
+
+    expect(test.creatable).toBe(false);
   });
 });
