@@ -1,4 +1,3 @@
-export default function helloWorld()
-{
-    console.log(helloWorld());
-}
+import { Creatable } from "./decorators/creatable.decorator";
+
+export { Creatable };

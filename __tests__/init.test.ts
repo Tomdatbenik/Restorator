@@ -1,4 +1,4 @@
-import { Creatable } from "../src/decorators/creatable.decorator";
+import { Creatable } from "../src";
 
 describe("Creatable", () => {
   @Creatable
