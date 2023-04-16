@@ -5,7 +5,7 @@ describe("Creatable", () => {
   @Creatable
   class ModelWithCreatable extends Model {}
 
-  class ModelWithoutCreatable extends Model{}
+  class ModelWithoutCreatable extends Model {}
 
   it("should be true", () => {
     const test = new ModelWithCreatable();
