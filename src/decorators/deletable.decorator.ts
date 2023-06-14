@@ -1,10 +1,10 @@
 import { setModelMeta } from "../functions/setModelMeta.function";
 import { Model } from "..";
 
-export function Creatable(desired = true) {
+export function Deletable(desired = true) {
   return function (target: typeof Model, context: ClassDecoratorContext) {
     if (context.kind === "class") {
-      setModelMeta(target, "_creatable", desired);
+      setModelMeta(target, "_deletable", desired);
     }
   };
 }

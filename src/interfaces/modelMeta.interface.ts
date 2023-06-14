@@ -1,3 +1,4 @@
-export interface ModelMeta{
-    _creatable?: boolean;
+export interface ModelMeta {
+  _creatable?: boolean;
+  _deletable?: boolean;
 }
