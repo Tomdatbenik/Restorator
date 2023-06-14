@@ -2,7 +2,7 @@ import { Model } from "../src";
 import { Creatable } from "../src";
 
 describe("Creatable", () => {
-  @Creatable
+  @Creatable()
   class ModelWithCreatable extends Model {}
 
   class ModelWithoutCreatable extends Model {}

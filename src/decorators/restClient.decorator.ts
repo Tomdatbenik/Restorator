@@ -1,12 +1,10 @@
-export function RestClient(baseUrl: string) {
-  return function <T extends { new (...args: any[]): {} }>(constructor: T) {
-    const cls = class extends constructor {
-      _baseUrl = baseUrl;
+import { setClientMeta } from "../functions/setClientMeta.function";
+import { ApiClient } from "./../classes/client.base";
 
-      get baseUrl() {
-        return this._baseUrl;
-      }
-    };
-    return cls;
+export function RestClient(baseUrl: string) {
+  return function (target: typeof ApiClient, context: ClassDecoratorContext) {
+    if (context.kind === "class") {
+      return setClientMeta(target, "_baseUrl", baseUrl);
+    }
   };
 }
