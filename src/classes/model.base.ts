@@ -8,7 +8,7 @@ export class Model implements IModel {
       _creatable: Reflect.get(this, "_creatable") as boolean,
       _deletable: Reflect.get(this, "_deletable") as boolean,
       _mapTo: Reflect.get(this, "_mapTo") as MapItem[],
-      _ignore: Reflect.get(this, "_ignore") as string[],
+      _exclude: Reflect.get(this, "_exclude") as string[],
     };
   }
 
@@ -30,11 +30,11 @@ export class Model implements IModel {
 
   public toJson(): string;
 
-  public toJson<T>(mapping?: [keyof T, string][]) {
+  public toJson<T>(mapping?: [keyof T, string][]): string {
     const body: any = {};
 
     Object.keys(this).forEach((property) => {
-      if (!this._meta._ignore?.includes(property)) {
+      if (!this._meta._exclude?.includes(property)) {
         body[property] = (this as any)[property];
       }
     });
@@ -53,14 +53,13 @@ export class Model implements IModel {
     return JSON.stringify(body);
   }
 
-  
   public parse<T>(): T;
 
   public parse<T>(mapping?: [keyof T, string][]): T {
     const body: Partial<T> = new Model() as any;
 
     Object.keys(this).forEach((property) => {
-      if (!this._meta._ignore?.includes(property)) {
+      if (!this._meta._exclude?.includes(property)) {
         (body as any)[property] = (this as any)[property];
       }
     });

@@ -7,7 +7,7 @@ import { Deletable } from "./decorators/deletable.decorator";
 import { Bound } from "./decorators/bound.decorator";
 import { MapTo } from "./decorators/mapTo";
 import { IModel } from "./interfaces/model.interface";
-import { Ignore } from "./decorators/ignore";
+import { Exclude } from "./decorators/exclude.decorator";
 
 export {
   Creatable,
@@ -19,5 +19,5 @@ export {
   Collection,
   Bound,
   MapTo,
-  Ignore,
+  Exclude,
 };

@@ -1,4 +1,4 @@
-import { IModel, Ignore, Model } from "../src";
+import { IModel, Exclude, Model } from "../src";
 import { MapTo } from "../src";
 
 describe("MapTo", () => {
@@ -8,7 +8,7 @@ describe("MapTo", () => {
 
     private leftAlone = "left alone";
 
-    @Ignore()
+    @Exclude()
     private removed = "removed";
 
     @MapTo("target_getter")

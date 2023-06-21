@@ -1,13 +1,13 @@
 import { Model } from "..";
-import { setIgnoreMeta } from "../functions/setIgnoreMeta.function";
+import { setExcludeMeta } from "../functions/setExcludeMeta.function";
 
-export function Ignore() {
+export function Exclude() {
   return function (
     originalMethod: any,
     context: ClassFieldDecoratorContext | ClassGetterDecoratorContext
   ) {
     context.addInitializer(function () {
-      setIgnoreMeta(this as Model, context.name.toString());
+      setExcludeMeta(this as Model, context.name.toString());
     });
   };
 }
