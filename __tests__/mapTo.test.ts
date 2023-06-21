@@ -63,14 +63,16 @@ describe("MapTo", () => {
 
     //Should be same object
     const actual = model.parse<DTO>();
-    const parsedActual = actual.parse<DTO>();
+    const parsedActual = actual.parse<DTO>([['target_field', 'test']]);
 
     expect(actual).toEqual(parsedActual);
+
     expect(actual.target_field).toBe("test");
     expect(actual.target_getter).toBe("gettertest");
     expect(actual.leftAlone).toBe("left alone");
 
     parsedActual.target_field = 'new value'
+    
     expect(parsedActual.target_field).toBe("new value");
     expect(actual.target_field).toBe("test");
     expect(actual.toJson()).toBe(JSON.stringify(expected))

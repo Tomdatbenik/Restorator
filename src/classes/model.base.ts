@@ -1,6 +1,7 @@
 import { IModel } from "..";
 import { MapItem } from "./../interfaces/mapItem.interface";
 import { ModelMeta } from "./../interfaces/modelMeta.interface";
+
 export class Model implements IModel {
   private get _meta(): Partial<ModelMeta> {
     return {
@@ -27,7 +28,9 @@ export class Model implements IModel {
     }
   }
 
-  public toJson() {
+  public toJson(): string;
+
+  public toJson<T>(mapping?: [keyof T, string][]) {
     const body: any = {};
 
     Object.keys(this).forEach((property) => {
@@ -50,7 +53,10 @@ export class Model implements IModel {
     return JSON.stringify(body);
   }
 
-  public parse<T>(): T {
+  
+  public parse<T>(): T;
+
+  public parse<T>(mapping?: [keyof T, string][]): T {
     const body: Partial<T> = new Model() as any;
 
     Object.keys(this).forEach((property) => {
