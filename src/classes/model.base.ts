@@ -7,6 +7,7 @@ export class Model implements IModel {
       _creatable: Reflect.get(this, "_creatable") as boolean,
       _deletable: Reflect.get(this, "_deletable") as boolean,
       _mapTo: Reflect.get(this, "_mapTo") as MapItem[],
+      _ignore: Reflect.get(this, "_ignore") as string[],
     };
   }
 
@@ -27,27 +28,44 @@ export class Model implements IModel {
   }
 
   public toJson() {
+    const body: any = {};
+
+    Object.keys(this).forEach((property) => {
+      if (!this._meta._ignore?.includes(property)) {
+        body[property] = (this as any)[property];
+      }
+    });
+
     if (this._meta._mapTo == null) {
-      return JSON.stringify(this);
+      return JSON.stringify(body);
     }
 
-    const body: any = {};
+    delete body["_meta"];
+
     this._meta._mapTo.reverse().forEach((item) => {
       body[item.target] = (this as any)[item.source];
+      delete body[item.source];
     });
 
     return JSON.stringify(body);
   }
 
   public parse<T>(): T {
+    const body: Partial<T> = new Model() as any;
+
+    Object.keys(this).forEach((property) => {
+      if (!this._meta._ignore?.includes(property)) {
+        (body as any)[property] = (this as any)[property];
+      }
+    });
+
     if (this._meta._mapTo == null) {
-      return this as unknown as T;
+      return body as unknown as T;
     }
 
-    const body: Partial<T> = new Model() as any;
-    
     this._meta._mapTo.reverse().forEach((item) => {
       (body as any)[item.target] = (this as any)[item.source];
+      delete (body as any)[item.source];
     });
 
     return body as unknown as T;
