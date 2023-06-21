@@ -11,7 +11,7 @@ describe("Bound", () => {
     }
   }
 
-  it("should be true", () => {
+  it("should be bound to instance 'test'", () => {
     const { getTest } = new ModelWithCreatable();
 
     expect(getTest()).toBe('test');

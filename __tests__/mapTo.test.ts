@@ -1,4 +1,4 @@
-import { Model } from "../src";
+import { IModel, Model } from "../src";
 import { MapTo } from "../src";
 
 describe("MapTo", () => {
@@ -12,14 +12,34 @@ describe("MapTo", () => {
     }
   }
 
-  it("should be true", () => {
-    const getTest = new ModelWithCreatable();
+  interface DTO extends IModel {
+    target_field: string;
+    target_getter: string;
+  }
+
+  it("should get different json", () => {
+    const model = new ModelWithCreatable();
 
     const expected = {
       target_field: "test",
       target_getter: "gettertest",
     };
 
-    expect(getTest.toJson()).toBe(JSON.stringify(expected));
+    expect(model.toJson()).toBe(JSON.stringify(expected));
+  });
+
+  it("should get target object", () => {
+    const model = new ModelWithCreatable();
+
+    const expected = {
+      target_field: "test",
+      target_getter: "gettertest",
+    };
+
+    const actual = model.parse<DTO>();
+
+    expect(actual.toJson()).toBe(JSON.stringify(expected));
+    expect(actual.target_field).toBe("test");
+    expect(actual.target_getter).toBe("gettertest");
   });
 });

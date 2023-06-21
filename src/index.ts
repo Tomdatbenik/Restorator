@@ -6,6 +6,7 @@ import { Creatable } from "./decorators/creatable.decorator";
 import { Deletable } from "./decorators/deletable.decorator";
 import { Bound } from "./decorators/bound.decorator";
 import { MapTo } from "./decorators/mapTo";
+import { IModel } from "./interfaces/model.interface";
 
 export {
   Creatable,
@@ -13,7 +14,8 @@ export {
   RestClient,
   ApiClient,
   Model,
+  IModel,
   Collection,
   Bound,
-  MapTo
+  MapTo,
 };

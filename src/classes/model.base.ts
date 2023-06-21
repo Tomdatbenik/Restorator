@@ -1,6 +1,7 @@
+import { IModel } from "..";
 import { MapItem } from "./../interfaces/mapItem.interface";
 import { ModelMeta } from "./../interfaces/modelMeta.interface";
-export class Model {
+export class Model implements IModel {
   private get _meta(): Partial<ModelMeta> {
     return {
       _creatable: Reflect.get(this, "_creatable") as boolean,
@@ -36,5 +37,19 @@ export class Model {
     });
 
     return JSON.stringify(body);
+  }
+
+  public parse<T>(): T {
+    if (this._meta._mapTo == null) {
+      return this as unknown as T;
+    }
+
+    const body: Partial<T> = new Model() as any;
+    
+    this._meta._mapTo.reverse().forEach((item) => {
+      (body as any)[item.target] = (this as any)[item.source];
+    });
+
+    return body as unknown as T;
   }
 }
