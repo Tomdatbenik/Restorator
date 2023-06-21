@@ -31,8 +31,7 @@ export class Model {
     }
 
     const body: any = {};
-
-    this._meta._mapTo.forEach((item) => {
+    this._meta._mapTo.reverse().forEach((item) => {
       body[item.target] = (this as any)[item.source];
     });
 
