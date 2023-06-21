@@ -1,0 +1,1 @@
+export interface MapItem { source: string; target: string }
