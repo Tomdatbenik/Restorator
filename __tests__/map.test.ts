@@ -12,7 +12,7 @@ describe("MapTo", () => {
     @Exclude()
     private removed = "removed";
 
-    @MapTo("target_getter")
+    @MapTo("targets_getter")
     private get getterTest(): string {
       return "gettertest";
     }
@@ -21,7 +21,7 @@ describe("MapTo", () => {
   interface DTO extends IModel {
     leftAlone: string;
     target_field: string;
-    target_getter: string;
+    targets_getter: string;
   }
 
   interface DifferentType {
@@ -35,10 +35,22 @@ describe("MapTo", () => {
       const expected = {
         leftAlone: "left alone",
         target_field: "value",
-        target_getter: "gettertest",
+        targets_getter: "gettertest",
       };
 
       expect(model.toJson()).toBe(JSON.stringify(expected));
+    });
+
+    it("should get return json with mapped object", () => {
+      const model = new MapModel();
+
+      const expected = {
+        targets_getter: "gettertest",
+      };
+
+      expect(model.toJson([["getterTest", "targets_getter"]])).toBe(
+        JSON.stringify(expected)
+      );
     });
   });
 
@@ -49,14 +61,14 @@ describe("MapTo", () => {
       const expected = {
         leftAlone: "left alone",
         target_field: "value",
-        target_getter: "gettertest",
+        targets_getter: "gettertest",
       };
 
       const actual = model.parse<DTO>();
 
       expect(actual.toJson()).toBe(JSON.stringify(expected));
       expect(actual.target_field).toBe("value");
-      expect(actual.target_getter).toBe("gettertest");
+      expect(actual.targets_getter).toBe("gettertest");
       expect(actual.leftAlone).toBe("left alone");
       expect((actual as any).test).toBe(undefined);
     });
@@ -67,7 +79,7 @@ describe("MapTo", () => {
       const expected = {
         leftAlone: "left alone",
         target_field: "value",
-        target_getter: "gettertest",
+        targets_getter: "gettertest",
       };
 
       //Should be same object
@@ -77,7 +89,7 @@ describe("MapTo", () => {
       expect(actual).toEqual(parsedActual);
 
       expect(actual.target_field).toBe("value");
-      expect(actual.target_getter).toBe("gettertest");
+      expect(actual.targets_getter).toBe("gettertest");
       expect(actual.leftAlone).toBe("left alone");
 
       parsedActual.target_field = "new value";
@@ -144,7 +156,7 @@ describe("MapTo", () => {
 
         constructor(otherField: string, objectParam: { objectField: string }) {
           this.otherField = otherField;
-          this.objectField = objectParam.objectField
+          this.objectField = objectParam.objectField;
         }
       }
 

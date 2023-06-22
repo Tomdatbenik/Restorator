@@ -36,6 +36,11 @@ export class Model implements IModel {
   public toJson<T>(mapping?: MapToTuple<T>): string;
 
   public toJson<T>(mapping?: MapToTuple<T>): string {
+    if(mapping)
+    {
+      return JSON.stringify(this.parse<T>(mapping));
+    }
+
     return JSON.stringify(this.parse());
   }
 
