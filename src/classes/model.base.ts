@@ -44,6 +44,7 @@ export class Model implements IModel {
     return JSON.stringify(this.parse());
   }
 
+  public parse(): any;
   public parse<T>(): T;
   public parse<T, Y>(
     mapping: MapTuple<T, Y>,

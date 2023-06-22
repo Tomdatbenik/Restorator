@@ -55,6 +55,24 @@ describe("MapTo", () => {
   });
 
   describe("parse", () => {
+    it("should parse to any", () => {
+      const model = new MapModel();
+
+      const expected = {
+        leftAlone: "left alone",
+        target_field: "value",
+        targets_getter: "gettertest",
+      };
+
+      const actual = model.parse();
+
+      expect(actual.toJson()).toBe(JSON.stringify(expected));
+      expect(actual.target_field).toBe("value");
+      expect(actual.targets_getter).toBe("gettertest");
+      expect(actual.leftAlone).toBe("left alone");
+      expect(actual.test).toBe(undefined);
+    });
+
     it("should parse to DTO as Model typed as DTO with new fields", () => {
       const model = new MapModel();
 
@@ -157,7 +175,7 @@ describe("MapTo", () => {
 
       const mapping: MapTuple<MapModel, NewTestClass> = [["test", "new_field"]];
 
-      //Should be same object
+      //Should be same object with correct type
       const actual = model.parse<MapModel, NewTestClass>(mapping, NewTestClass);
 
       expect(actual.new_field).toBe("value");

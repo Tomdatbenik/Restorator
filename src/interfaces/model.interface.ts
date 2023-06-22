@@ -8,6 +8,7 @@ export interface IModel {
   toJson(): string;
   toJson<T>(mapping?: MapToTuple<T>): string;
 
+  parse(): any;
   parse<T>(): T;
   parse<T, Y>(
     mapping: MapTuple<T, Y>,
