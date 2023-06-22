@@ -8,6 +8,7 @@ import { Bound } from "./decorators/bound.decorator";
 import { MapTo } from "./decorators/mapTo";
 import { IModel } from "./interfaces/model.interface";
 import { Exclude } from "./decorators/exclude.decorator";
+import { MapToTuple, MapTuple } from "./interfaces/mapTuple.interface";
 
 export {
   Creatable,
@@ -20,4 +21,6 @@ export {
   Bound,
   MapTo,
   Exclude,
+  MapTuple,
+  MapToTuple,
 };
