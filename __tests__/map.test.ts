@@ -1,4 +1,4 @@
-import { MapTuple } from "../src";
+import { MapToTuple, MapTuple } from "../src";
 import { IModel, Exclude, Model } from "../src";
 import { MapTo } from "../src";
 
@@ -112,7 +112,25 @@ describe("MapTo", () => {
       expect((actual as any).test).toBe(undefined);
     });
 
-    it("should parse to mapping if passed in parameters", () => {
+    it("should parse to mapping if passed in parameters with MapToTuple", () => {
+      const model = new MapModel();
+
+      class NewTestClass {
+        new_field?: string;
+      }
+
+      const mapping: MapToTuple<MapModel> = [["test", "new_field"]];
+
+      //Should be same object
+      const actual = model.parse<MapModel>(mapping) as NewTestClass;
+
+      expect(actual.new_field).toBe("value");
+      expect((actual as any).test).toBe(undefined);
+      expect((actual as any).getterTest).toBe(undefined);
+      expect(actual).toBeInstanceOf(Model);
+    });
+
+    it("should parse to mapping if passed in parameters with MapTuple", () => {
       const model = new MapModel();
 
       class NewTestClass {
@@ -122,10 +140,11 @@ describe("MapTo", () => {
       const mapping: MapTuple<MapModel, NewTestClass> = [["test", "new_field"]];
 
       //Should be same object
-      const actual = model.parse<MapModel>(mapping);
+      const actual = model.parse<MapModel>(mapping) as NewTestClass;
 
       expect(actual.new_field).toBe("value");
       expect((actual as any).test).toBe(undefined);
+      expect((actual as any).getterTest).toBe(undefined);
       expect(actual).toBeInstanceOf(Model);
     });
 
