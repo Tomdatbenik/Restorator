@@ -40,15 +40,20 @@ export class Model implements IModel {
   }
 
   public parse<T>(): T;
-  public parse<T, Y>(mapping: MapTuple<T, Y>, target: { new (): Y }): Y;
+  public parse<T, Y>(
+    mapping: MapTuple<T, Y>,
+    target: { new (...args: any[]): Y },
+    ...args: any[]
+  ): Y;
   public parse<T>(mapping: MapToTuple<T>): any;
 
   public parse<T, Y>(
     mapping?: MapToTuple<T> | MapTuple<T, Y>,
-    target?: Y
+    target?: Y,
+    ...args: any[]
   ): Y | T {
     if (mapping != null) {
-      return mapToMapping<T, Y>(this, mapping as MapTuple<T, Y>, target);
+      return mapToMapping<T, Y>(this, mapping as MapTuple<T, Y>, target, args);
     }
 
     const body: Partial<T> = new Model() as any;

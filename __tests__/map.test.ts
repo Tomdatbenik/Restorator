@@ -28,105 +28,141 @@ describe("MapTo", () => {
     target_field: string;
   }
 
-  it("should get different json", () => {
-    const model = new MapModel();
+  describe("toJson", () => {
+    it("should get return json of the object", () => {
+      const model = new MapModel();
 
-    const expected = {
-      leftAlone: "left alone",
-      target_field: "value",
-      target_getter: "gettertest",
-    };
+      const expected = {
+        leftAlone: "left alone",
+        target_field: "value",
+        target_getter: "gettertest",
+      };
 
-    expect(model.toJson()).toBe(JSON.stringify(expected));
+      expect(model.toJson()).toBe(JSON.stringify(expected));
+    });
   });
 
-  it("should get target object", () => {
-    const model = new MapModel();
+  describe("parse", () => {
+    it("should parse to DTO as Model typed as DTO with new fields", () => {
+      const model = new MapModel();
 
-    const expected = {
-      leftAlone: "left alone",
-      target_field: "value",
-      target_getter: "gettertest",
-    };
+      const expected = {
+        leftAlone: "left alone",
+        target_field: "value",
+        target_getter: "gettertest",
+      };
 
-    const actual = model.parse<DTO>();
+      const actual = model.parse<DTO>();
 
-    expect(actual.toJson()).toBe(JSON.stringify(expected));
-    expect(actual.target_field).toBe("value");
-    expect(actual.target_getter).toBe("gettertest");
-    expect(actual.leftAlone).toBe("left alone");
-  });
+      expect(actual.toJson()).toBe(JSON.stringify(expected));
+      expect(actual.target_field).toBe("value");
+      expect(actual.target_getter).toBe("gettertest");
+      expect(actual.leftAlone).toBe("left alone");
+      expect((actual as any).test).toBe(undefined);
+    });
 
-  it("should get new object from parse chain", () => {
-    const model = new MapModel();
+    it("should be able to call parse after parse since parsed model is still instance of model, parsed object should be new object", () => {
+      const model = new MapModel();
 
-    const expected = {
-      leftAlone: "left alone",
-      target_field: "value",
-      target_getter: "gettertest",
-    };
+      const expected = {
+        leftAlone: "left alone",
+        target_field: "value",
+        target_getter: "gettertest",
+      };
 
-    //Should be same object
-    const actual = model.parse<DTO>();
-    const parsedActual = actual.parse<DTO>();
+      //Should be same object
+      const actual = model.parse<DTO>();
+      const parsedActual = actual.parse<DTO>();
 
-    expect(actual).toEqual(parsedActual);
+      expect(actual).toEqual(parsedActual);
 
-    expect(actual.target_field).toBe("value");
-    expect(actual.target_getter).toBe("gettertest");
-    expect(actual.leftAlone).toBe("left alone");
+      expect(actual.target_field).toBe("value");
+      expect(actual.target_getter).toBe("gettertest");
+      expect(actual.leftAlone).toBe("left alone");
 
-    parsedActual.target_field = "new value";
+      parsedActual.target_field = "new value";
 
-    expect(parsedActual.target_field).toBe("new value");
-    expect(actual.target_field).toBe("value");
-    expect(actual.toJson()).toBe(JSON.stringify(expected));
+      expect(parsedActual.target_field).toBe("new value");
+      expect(actual.target_field).toBe("value");
+      expect(actual.toJson()).toBe(JSON.stringify(expected));
 
-    expect(actual).toBeInstanceOf(Model);
-    expect(parsedActual).toBeInstanceOf(Model);
-  });
+      expect(actual).toBeInstanceOf(Model);
+      expect(parsedActual).toBeInstanceOf(Model);
+    });
 
-  it("should parse to new object", () => {
-    const model = new MapModel();
+    it("should removes old fields", () => {
+      const model = new MapModel();
 
-    //Should be same object
-    const actual = model.parse<DifferentType>();
+      //Should be same object
+      const actual = model.parse<DifferentType>();
 
-    expect(actual.target_field).toBe("value");
-    expect((actual as any).test).toBe(undefined);
-  });
+      expect(actual.target_field).toBe("value");
+      expect((actual as any).test).toBe(undefined);
+    });
 
-  it("should get new object from mapping with correct type", () => {
-    const model = new MapModel();
+    it("should parse to mapping if passed in parameters", () => {
+      const model = new MapModel();
 
-    class NewTestClass {
-      new_field?: string;
-    }
+      class NewTestClass {
+        new_field?: string;
+      }
 
-    const mapping: MapTuple<MapModel, NewTestClass> = [["test", "new_field"]];
+      const mapping: MapTuple<MapModel, NewTestClass> = [["test", "new_field"]];
 
-    //Should be same object
-    const actual = model.parse<MapModel, NewTestClass>(mapping, NewTestClass);
+      //Should be same object
+      const actual = model.parse<MapModel>(mapping);
 
-    expect(actual.new_field).toBe("value");
-    expect((actual as any).test).toBe(undefined);
-    expect(actual).toBeInstanceOf(NewTestClass);
-  });
+      expect(actual.new_field).toBe("value");
+      expect((actual as any).test).toBe(undefined);
+      expect(actual).toBeInstanceOf(Model);
+    });
 
-  it("should get new object from mapping with model type", () => {
-    const model = new MapModel();
+    it("should parse to mapping with new type", () => {
+      const model = new MapModel();
 
-    class NewTestClass {
-      new_field?: string;
-    }
+      class NewTestClass {
+        new_field?: string;
+      }
 
-    const mapping: MapTuple<MapModel, NewTestClass> = [["test", "new_field"]];
+      const mapping: MapTuple<MapModel, NewTestClass> = [["test", "new_field"]];
 
-    //Should be same object
-    const actual = model.parse<MapModel>(mapping);
+      //Should be same object
+      const actual = model.parse<MapModel, NewTestClass>(mapping, NewTestClass);
 
-    expect(actual.new_field).toBe("value");
-    expect((actual as any).test).toBe(undefined);
-    expect(actual).toBeInstanceOf(Model);
+      expect(actual.new_field).toBe("value");
+      expect((actual as any).test).toBe(undefined);
+      expect(actual).toBeInstanceOf(NewTestClass);
+    });
+
+    it("should parse to mapping with new type and used params", () => {
+      const model = new MapModel();
+
+      class NewTestClass {
+        new_field?: string;
+        otherField: string;
+        objectField: string;
+
+        constructor(otherField: string, objectParam: { objectField: string }) {
+          this.otherField = otherField;
+          this.objectField = objectParam.objectField
+        }
+      }
+
+      const mapping: MapTuple<MapModel, NewTestClass> = [["test", "new_field"]];
+
+      //Should be same object
+      const actual = model.parse<MapModel, NewTestClass>(
+        mapping,
+        NewTestClass,
+        "OtherFieldValue",
+        { objectField: "test" }
+      );
+
+      expect(actual.new_field).toBe("value");
+      expect(actual.otherField).toBe("OtherFieldValue");
+      expect(actual.objectField).toBe("test");
+      expect((actual as any).test).toBe(undefined);
+      expect(actual).toBeInstanceOf(NewTestClass);
+    });
   });
 });

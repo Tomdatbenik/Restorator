@@ -4,12 +4,19 @@ import { Model } from "..";
 export function mapToMapping<T, Y>(
   model: Model,
   mapping: MapTuple<T, Y>,
-  type?: Y
+  type?: Y,
+  args?: any[]
 ): Y {
   let body: Partial<T> = new Model() as any;
 
   if (type) {
-    body = new (type as any)();
+    if(args != null)
+    {
+        body = new (type as any)(...args);
+    }
+    else{
+        body = new (type as any)();
+    }
   }
 
   mapping.forEach((item) => {
