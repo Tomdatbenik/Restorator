@@ -36,8 +36,7 @@ export class Model implements IModel {
   public toJson<T>(mapping?: MapToTuple<T>): string;
 
   public toJson<T>(mapping?: MapToTuple<T>): string {
-    if(mapping)
-    {
+    if (mapping) {
       return JSON.stringify(this.parse<T>(mapping));
     }
 
@@ -66,7 +65,11 @@ export class Model implements IModel {
 
     Object.keys(this).forEach((property) => {
       if (!this._meta._exclude?.includes(property)) {
-        (body as any)[property] = (this as any)[property];
+        if ((this as any)[property] instanceof Model) {
+          (body as any)[property] = (this as any)[property].parse();
+        } else {
+          (body as any)[property] = (this as any)[property];
+        }
       }
     });
 
@@ -75,7 +78,12 @@ export class Model implements IModel {
     }
 
     this._meta._mapTo.reverse().forEach((item) => {
-      (body as any)[item.target] = (this as any)[item.source];
+      if ((this as any)[item.source] instanceof Model) {
+        (body as any)[item.target] = (this as any)[item.source].parse();
+      } else {
+        (body as any)[item.target] = (this as any)[item.source];
+      }
+
       delete (body as any)[item.source];
     });
 

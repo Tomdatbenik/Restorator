@@ -18,6 +18,38 @@ describe("MapTo", () => {
     }
   }
 
+  class ChildModel extends Model {
+    @MapTo("childTarget")
+    private childSource = "childSource";
+
+    private lowestModel = new LowestModel();
+  }
+
+  class LowestModel extends Model {
+    @MapTo("lowestTarget")
+    private lowestSource = "lowestSource";
+  }
+
+  class ParentModel extends Model {
+    @MapTo("parentTarget")
+    private parentSource = "parentSource";
+
+    private childModel = new ChildModel();
+  }
+
+  class ChildMatoModel extends Model {
+    @MapTo("childTarget")
+    private childSource = "childSource";
+  }
+
+  class ParentMaptoModel extends Model {  
+    @MapTo("parentTarget")
+    private parentSource = "parentSource";
+
+    @MapTo("childModelTarget")
+    private childModel = new ChildMatoModel();
+  }
+
   interface DTO extends IModel {
     leftAlone: string;
     target_field: string;
@@ -51,6 +83,22 @@ describe("MapTo", () => {
       expect(model.toJson([["getterTest", "targets_getter"]])).toBe(
         JSON.stringify(expected)
       );
+    });
+
+    it("Should parse through children", () => {
+      const parentModel = new ParentModel();
+
+      const actual = parentModel.toJson();
+
+      const expected = {
+        childModel: {
+          lowestModel: { lowestTarget: "lowestSource" },
+          childTarget: "childSource",
+        },
+        parentTarget: "parentSource",
+      };
+
+      expect(actual).toBe(JSON.stringify(expected));
     });
   });
 
@@ -212,6 +260,31 @@ describe("MapTo", () => {
       expect(actual.objectField).toBe("test");
       expect((actual as any).test).toBe(undefined);
       expect(actual).toBeInstanceOf(NewTestClass);
+    });
+
+    it("Should parse through children", () => {
+      const parentModel = new ParentModel();
+
+      const actual = parentModel.parse();
+
+      const child = actual.childModel;
+
+      const lowest = child.lowestModel;
+
+      expect(actual.parentTarget).toBe("parentSource");
+      expect(child.childTarget).toBe("childSource");
+      expect(lowest.lowestTarget).toBe("lowestSource");
+    });
+
+    it("Should parse through children", () => {
+      const parentModel = new ParentMaptoModel();
+
+      const actual = parentModel.parse();
+
+      const child = actual.childModelTarget;
+
+      expect(actual.parentTarget).toBe("parentSource");
+      expect(child.childTarget).toBe("childSource");
     });
   });
 });
