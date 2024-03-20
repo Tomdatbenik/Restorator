@@ -15,6 +15,12 @@ describe("MapTo", () => {
     }
   }
 
+  interface DTO extends IModel {
+    leftAlone: string;
+    target_field: string;
+    targets_getter: string;
+  }
+
   class ChildModel extends Model {
     @MapTo("childTarget")
     private childSource = "childSource";
@@ -34,7 +40,7 @@ describe("MapTo", () => {
     private childModel = new ChildModel();
   }
 
-  class ChildMatoModel extends Model {
+  class ChildMaptoModel extends Model {
     @MapTo("childTarget")
     private childSource = "childSource";
   }
@@ -44,7 +50,7 @@ describe("MapTo", () => {
     private parentSource = "parentSource";
 
     @MapTo("childModelTarget")
-    private childModel = new ChildMatoModel();
+    private childModel = new ChildMaptoModel();
   }
 
   interface DTO extends IModel {
