@@ -106,16 +106,21 @@ export class Model implements IModel {
   }
 
   public fromJson<T extends Model>(json: string): T;
-  public fromJson<T extends Model>(
-    json: string,
-    mapping: MapFromTuple<T>
-  ): T;
+  public fromJson<T extends Model>(json: string, mapping: MapFromTuple<T>): T;
 
   public fromJson<T extends Model>(
     json: string,
     mapping?: MapFromTuple<T>
   ): any {
-    console.log(this._meta._mapFrom);
+    if (this._meta._mapFrom == null) {
+      return this;
+    }
+
+    const source = JSON.parse(json);
+
+    this._meta._mapFrom.reverse().forEach((item) => {
+      (this as any)[item.target] = source[item.source];
+    });
 
     return this;
   }

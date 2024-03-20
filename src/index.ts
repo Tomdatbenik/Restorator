@@ -1,3 +1,4 @@
+import { MapFrom } from "./decorators/mapFrom";
 import { Collection } from "./classes/collection.base";
 import { ApiClient } from "./classes/client.base";
 import { Model } from "./classes/model.base";
@@ -20,6 +21,7 @@ export {
   Collection,
   Bound,
   MapTo,
+  MapFrom,
   Exclude,
   MapTuple,
   MapToTuple,

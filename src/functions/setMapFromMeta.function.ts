@@ -1,7 +1,7 @@
 import { MapItem } from "../interfaces/mapItem.interface";
 import { Model } from "../classes/model.base";
 
-export function SetMapToMeta(
+export function SetMapFromMeta(
   target: Model,
   mapItem: MapItem
 ) {

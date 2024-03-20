@@ -1,14 +1,14 @@
 import { Model } from "..";
-import { SetMapToMeta } from "../functions/setMapToMeta.function";
+import { SetMapFromMeta } from "../functions/setMapFromMeta.function";
 
-export function MapFrom(target: string) {
+export function MapFrom(source: string) {
   return function (
     _: any,
     context: ClassFieldDecoratorContext | ClassGetterDecoratorContext
   ) {
     context.addInitializer(function () {
-      SetMapToMeta(this as Model, {
-        source: target,
+      SetMapFromMeta(this as Model, {
+        source: source,
         target: context.name.toString(),
       });
     });

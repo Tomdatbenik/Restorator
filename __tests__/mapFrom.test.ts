@@ -1,5 +1,4 @@
-import { MapFrom } from "../src/decorators/mapFrom";
-import { Exclude, Model } from "../src/index";
+import { Model, MapFrom } from "../src/index";
 
 describe("mapFrom", () => {
   class MapFromModel extends Model {
@@ -20,6 +19,7 @@ describe("mapFrom", () => {
       const actual = model.fromJson<MapFromModel>(json);
 
       expect(actual.leftAlone).toBe("left alone");
+      expect(actual.test).toBe("value");
     });
   });
 });
