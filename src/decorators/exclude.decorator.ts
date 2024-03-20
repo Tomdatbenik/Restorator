@@ -3,7 +3,7 @@ import { setExcludeMeta } from "../functions/setExcludeMeta.function";
 
 export function Exclude() {
   return function (
-    originalMethod: any,
+    _: any,
     context: ClassFieldDecoratorContext | ClassGetterDecoratorContext
   ) {
     context.addInitializer(function () {

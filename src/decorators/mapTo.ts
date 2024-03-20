@@ -3,7 +3,7 @@ import { SetMapToMeta } from "../functions/setMapToMeta.function";
 
 export function MapTo(target: string) {
   return function (
-    originalMethod: any,
+    _: any,
     context: ClassFieldDecoratorContext | ClassGetterDecoratorContext
   ) {
     context.addInitializer(function () {
