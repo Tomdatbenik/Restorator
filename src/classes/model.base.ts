@@ -1,4 +1,8 @@
-import { MapToTuple, MapTuple } from "./../interfaces/mapTuple.interface";
+import {
+  MapFromTuble,
+  MapToTuple,
+  MapTuple,
+} from "./../interfaces/mapTuple.interface";
 import { IModel } from "..";
 import { MapItem } from "./../interfaces/mapItem.interface";
 import { ModelMeta } from "./../interfaces/modelMeta.interface";
@@ -42,6 +46,8 @@ export class Model implements IModel {
 
     return JSON.stringify(this.parse());
   }
+
+  //TODO create mapping for mapTo and mapFrom so one function does the mapping and creating of new object
 
   public parse(): any;
   public parse<T>(): T;
@@ -92,29 +98,28 @@ export class Model implements IModel {
   //#endregion
 
   //#region mapFrom
-
-  static fromJson<T extends Model>(json: string): Model;
-  static fromJson<T extends Model>(json: string, mapping: MapToTuple<T>): Model;
-
   static fromJson<T extends Model>(
     json: string,
-    mapping?: MapToTuple<T>
+    mapping: MapFromTuble<T>
   ): Model {
     throw new Error("Method not implemented.");
   }
 
   public fromJson<T extends Model>(json: string): Model;
-  public fromJson<T extends Model>(json: string, mapping: MapToTuple<T>): Model;
+  public fromJson<T extends Model>(
+    json: string,
+    mapping: MapFromTuble<T>
+  ): Model;
 
   public fromJson<T extends Model>(
     json: string,
-    mapping?: MapToTuple<T>
-  ): Model {
-    if (!mapping) {
-      return Model.fromJson(json);
-    }
+    mapping?: MapFromTuble<T>
+  ): any {
+    console.log(this._meta._mapFrom);
+  }
 
-    return Model.fromJson(json, mapping);
+  public static from(obj: any) {
+    throw new Error("Method not implemented.");
   }
 
   //#endregion

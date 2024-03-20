@@ -1,4 +1,4 @@
-import { MapToTuple, MapTuple } from "@/interfaces/mapTuple.interface";
+import { MapTuple } from "@/interfaces/mapTuple.interface";
 import { Model } from "..";
 
 export function mapToMapping<T, Y>(
@@ -10,17 +10,20 @@ export function mapToMapping<T, Y>(
   let body: Partial<T> = new Model() as any;
 
   if (type) {
-    if(args != null)
-    {
-        body = new (type as any)(...args);
-    }
-    else{
-        body = new (type as any)();
+    if (args != null) {
+      body = new (type as any)(...args);
+    } else {
+      body = new (type as any)();
     }
   }
 
   mapping.forEach((item) => {
-    (body as any)[item[1]] = (model as any)[item[0]];
+    if ((body as any)[item[0]] instanceof Model) {
+      (body as any)[item[1]] = (model as any)[item[0]].parse();
+    } else {
+      (body as any)[item[1]] = (model as any)[item[0]];
+    }
+
     delete (body as any)[item[0]];
   });
 
