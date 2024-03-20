@@ -1,5 +1,5 @@
 import {
-  MapFromTuble,
+  MapFromTuple,
   MapToTuple,
   MapTuple,
 } from "./../interfaces/mapTuple.interface";
@@ -19,7 +19,7 @@ export class Model implements IModel {
     };
   }
 
-  get creatable(): boolean {
+  public get creatable(): boolean {
     if (this._meta._creatable == null) {
       return false;
     } else {
@@ -27,7 +27,7 @@ export class Model implements IModel {
     }
   }
 
-  get deletable(): boolean {
+  public get deletable(): boolean {
     if (this._meta._deletable == null) {
       return false;
     } else {
@@ -100,22 +100,24 @@ export class Model implements IModel {
   //#region mapFrom
   static fromJson<T extends Model>(
     json: string,
-    mapping: MapFromTuble<T>
+    mapping: MapFromTuple<T>
   ): Model {
     throw new Error("Method not implemented.");
   }
 
-  public fromJson<T extends Model>(json: string): Model;
+  public fromJson<T extends Model>(json: string): T;
   public fromJson<T extends Model>(
     json: string,
-    mapping: MapFromTuble<T>
-  ): Model;
+    mapping: MapFromTuple<T>
+  ): T;
 
   public fromJson<T extends Model>(
     json: string,
-    mapping?: MapFromTuble<T>
+    mapping?: MapFromTuple<T>
   ): any {
     console.log(this._meta._mapFrom);
+
+    return this;
   }
 
   public static from(obj: any) {

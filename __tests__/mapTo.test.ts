@@ -3,14 +3,11 @@ import { IModel, Exclude, Model } from "../src";
 import { MapTo } from "../src";
 
 describe("MapTo", () => {
-  class MapModel extends Model {
+  class MapToModel extends Model {
     @MapTo("target_field")
     public test = "value";
 
     private leftAlone = "left alone";
-
-    @Exclude()
-    private removed = "removed";
 
     @MapTo("targets_getter")
     private get getterTest(): string {
@@ -42,7 +39,7 @@ describe("MapTo", () => {
     private childSource = "childSource";
   }
 
-  class ParentMaptoModel extends Model {  
+  class ParentMaptoModel extends Model {
     @MapTo("parentTarget")
     private parentSource = "parentSource";
 
@@ -62,7 +59,7 @@ describe("MapTo", () => {
 
   describe("toJson", () => {
     it("should get return json of the object", () => {
-      const model = new MapModel();
+      const model = new MapToModel();
 
       const expected = {
         leftAlone: "left alone",
@@ -74,7 +71,7 @@ describe("MapTo", () => {
     });
 
     it("should get return json with mapped object", () => {
-      const model = new MapModel();
+      const model = new MapToModel();
 
       const expected = {
         targets_getter: "gettertest",
@@ -104,7 +101,7 @@ describe("MapTo", () => {
 
   describe("parse", () => {
     it("should parse to any", () => {
-      const model = new MapModel();
+      const model = new MapToModel();
 
       const expected = {
         leftAlone: "left alone",
@@ -122,7 +119,7 @@ describe("MapTo", () => {
     });
 
     it("should parse to DTO as Model typed as DTO with new fields", () => {
-      const model = new MapModel();
+      const model = new MapToModel();
 
       const expected = {
         leftAlone: "left alone",
@@ -140,7 +137,7 @@ describe("MapTo", () => {
     });
 
     it("should be able to call parse after parse since parsed model is still instance of model, parsed object should be new object", () => {
-      const model = new MapModel();
+      const model = new MapToModel();
 
       const expected = {
         leftAlone: "left alone",
@@ -169,7 +166,7 @@ describe("MapTo", () => {
     });
 
     it("should removes old fields", () => {
-      const model = new MapModel();
+      const model = new MapToModel();
 
       //Should be same object
       const actual = model.parse<DifferentType>();
@@ -179,16 +176,16 @@ describe("MapTo", () => {
     });
 
     it("should parse to mapping if passed in parameters with MapToTuple", () => {
-      const model = new MapModel();
+      const model = new MapToModel();
 
       class NewTestClass {
         new_field?: string;
       }
 
-      const mapping: MapToTuple<MapModel> = [["test", "new_field"]];
+      const mapping: MapToTuple<MapToModel> = [["test", "new_field"]];
 
       //Should be same object
-      const actual = model.parse<MapModel>(mapping) as NewTestClass;
+      const actual: NewTestClass = model.parse<MapToModel>(mapping);
 
       expect(actual.new_field).toBe("value");
       expect((actual as any).test).toBe(undefined);
@@ -197,16 +194,16 @@ describe("MapTo", () => {
     });
 
     it("should parse to mapping if passed in parameters with MapTuple", () => {
-      const model = new MapModel();
+      const model = new MapToModel();
 
       class NewTestClass {
         new_field?: string;
       }
 
-      const mapping: MapTuple<MapModel, NewTestClass> = [["test", "new_field"]];
+      const mapping: MapTuple<MapToModel, NewTestClass> = [["test", "new_field"]];
 
       //Should be same object
-      const actual = model.parse<MapModel>(mapping) as NewTestClass;
+      const actual: NewTestClass = model.parse<MapToModel>(mapping);
 
       expect(actual.new_field).toBe("value");
       expect((actual as any).test).toBe(undefined);
@@ -215,16 +212,16 @@ describe("MapTo", () => {
     });
 
     it("should parse to mapping with new type", () => {
-      const model = new MapModel();
+      const model = new MapToModel();
 
       class NewTestClass {
         new_field?: string;
       }
 
-      const mapping: MapTuple<MapModel, NewTestClass> = [["test", "new_field"]];
+      const mapping: MapTuple<MapToModel, NewTestClass> = [["test", "new_field"]];
 
       //Should be same object with correct type
-      const actual = model.parse<MapModel, NewTestClass>(mapping, NewTestClass);
+      const actual = model.parse<MapToModel, NewTestClass>(mapping, NewTestClass);
 
       expect(actual.new_field).toBe("value");
       expect((actual as any).test).toBe(undefined);
@@ -232,7 +229,7 @@ describe("MapTo", () => {
     });
 
     it("should parse to mapping with new type and used params", () => {
-      const model = new MapModel();
+      const model = new MapToModel();
 
       class NewTestClass {
         new_field?: string;
@@ -245,10 +242,10 @@ describe("MapTo", () => {
         }
       }
 
-      const mapping: MapTuple<MapModel, NewTestClass> = [["test", "new_field"]];
+      const mapping: MapTuple<MapToModel, NewTestClass> = [["test", "new_field"]];
 
       //Should be same object
-      const actual = model.parse<MapModel, NewTestClass>(
+      const actual = model.parse<MapToModel, NewTestClass>(
         mapping,
         NewTestClass,
         "OtherFieldValue",
