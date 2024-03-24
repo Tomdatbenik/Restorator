@@ -47,6 +47,17 @@ describe("MapTo", () => {
     private childModel = new ChildMatoModel();
   }
 
+  class MultiMapToModel extends Model {
+    @MapTo("target_field")
+    @MapTo("target_field2")
+    public test = "value";
+  }
+
+  interface MultiMapToModelDTO extends IModel {
+    target_field: string;
+    target_field2: string;
+  }
+
   interface DTO extends IModel {
     leftAlone: string;
     target_field: string;
@@ -200,7 +211,9 @@ describe("MapTo", () => {
         new_field?: string;
       }
 
-      const mapping: MapTuple<MapToModel, NewTestClass> = [["test", "new_field"]];
+      const mapping: MapTuple<MapToModel, NewTestClass> = [
+        ["test", "new_field"],
+      ];
 
       //Should be same object
       const actual: NewTestClass = model.parse<MapToModel>(mapping);
@@ -218,10 +231,15 @@ describe("MapTo", () => {
         new_field?: string;
       }
 
-      const mapping: MapTuple<MapToModel, NewTestClass> = [["test", "new_field"]];
+      const mapping: MapTuple<MapToModel, NewTestClass> = [
+        ["test", "new_field"],
+      ];
 
       //Should be same object with correct type
-      const actual = model.parse<MapToModel, NewTestClass>(mapping, NewTestClass);
+      const actual = model.parse<MapToModel, NewTestClass>(
+        mapping,
+        NewTestClass
+      );
 
       expect(actual.new_field).toBe("value");
       expect((actual as any).test).toBe(undefined);
@@ -242,7 +260,9 @@ describe("MapTo", () => {
         }
       }
 
-      const mapping: MapTuple<MapToModel, NewTestClass> = [["test", "new_field"]];
+      const mapping: MapTuple<MapToModel, NewTestClass> = [
+        ["test", "new_field"],
+      ];
 
       //Should be same object
       const actual = model.parse<MapToModel, NewTestClass>(
@@ -282,6 +302,23 @@ describe("MapTo", () => {
 
       expect(actual.parentTarget).toBe("parentSource");
       expect(child.childTarget).toBe("childSource");
+    });
+  });
+
+  describe("multiple MapTo", () => {
+    it("should parse to multiple maps", () => {
+      const model = new MultiMapToModel();
+
+      const expected = {
+        target_field: "value",
+        target_field2: "value",
+      };
+
+      const actual = model.parse<MultiMapToModelDTO>();
+
+      expect(actual.toJson()).toBe(JSON.stringify(expected));
+      expect(actual.target_field).toBe("value");
+      expect(actual.target_field2).toBe("value");
     });
   });
 });
