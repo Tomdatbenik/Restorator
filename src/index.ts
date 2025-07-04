@@ -6,6 +6,7 @@ import { Creatable } from "./decorators/creatable.decorator";
 import { Deletable } from "./decorators/deletable.decorator";
 import { Bound } from "./decorators/bound.decorator";
 import { MapTo } from "./decorators/mapTo.decorator";
+import { MapFrom } from "./decorators/mapFrom";
 import { IModel } from "./interfaces/model.interface";
 import { Exclude } from "./decorators/exclude.decorator";
 import { MapToTuple, MapTuple } from "./interfaces/mapTuple.interface";
@@ -20,6 +21,7 @@ export {
   Collection,
   Bound,
   MapTo,
+  MapFrom,
   Exclude,
   MapTuple,
   MapToTuple,
