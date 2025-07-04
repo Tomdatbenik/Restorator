@@ -7,6 +7,7 @@ import { IModel } from "..";
 import { MapItem } from "./../interfaces/mapItem.interface";
 import { ModelMeta } from "./../interfaces/modelMeta.interface";
 import { mapToMapping } from "../functions/mapToMapping.function";
+import { unifiedMapping } from "../functions/unifiedMapping.function";
 
 export class Model implements IModel {
   private get _meta(): Partial<ModelMeta> {
@@ -64,36 +65,24 @@ export class Model implements IModel {
     ...args: any[]
   ): Y | T {
     if (mapping != null) {
-      return mapToMapping<T, Y>(this, mapping as MapTuple<T, Y>, target, args);
+      // Use unified mapping function for explicit mappings
+      return unifiedMapping<T, Y>({
+        source: this,
+        mapping: mapping,
+        targetType: target as any,
+        direction: 'mapTo',
+        args: args,
+        excludeProperties: this._meta._exclude || []
+      });
     }
 
-    const body: Partial<T> = new Model() as any;
-
-    Object.keys(this).forEach((property) => {
-      if (!this._meta._exclude?.includes(property)) {
-        if ((this as any)[property] instanceof Model) {
-          (body as any)[property] = (this as any)[property].parse();
-        } else {
-          (body as any)[property] = (this as any)[property];
-        }
-      }
+    // Use unified mapping function for decorator-based mappings or no mappings
+    return unifiedMapping<T, Y>({
+      source: this,
+      mapping: this._meta._mapTo,
+      direction: 'mapTo',
+      excludeProperties: this._meta._exclude || []
     });
-
-    if (this._meta._mapTo == null) {
-      return body as unknown as T;
-    }
-
-    this._meta._mapTo.reverse().forEach((item) => {
-      if ((this as any)[item.source] instanceof Model) {
-        (body as any)[item.target] = (this as any)[item.source].parse();
-      } else {
-        (body as any)[item.target] = (this as any)[item.source];
-      }
-
-      delete (body as any)[item.source];
-    });
-
-    return body as unknown as T;
   }
   //#endregion
 
@@ -111,13 +100,28 @@ export class Model implements IModel {
     mapping: MapFromTuple<T>
   ): T;
 
+  public fromJson<T extends Model>(json: string): T;
+  public fromJson<T extends Model>(
+    json: string,
+    mapping: MapFromTuple<T>
+  ): T;
+
   public fromJson<T extends Model>(
     json: string,
     mapping?: MapFromTuple<T>
   ): any {
-    console.log(this._meta._mapFrom);
-
-    return this;
+    const data = JSON.parse(json);
+    
+    // Use unified mapping function for fromJson
+    const result = unifiedMapping<any, T>({
+      source: data,
+      mapping: mapping || this._meta._mapFrom,
+      direction: 'mapFrom',
+      targetType: this.constructor as any,
+      excludeProperties: this._meta._exclude || []
+    });
+    
+    return result;
   }
 
   public static from(obj: any) {
